@@ -11,7 +11,7 @@
 // click on a players planet to choose someone else as center
 
 // this needs to be changed
-const API_URL_GRAPH = 'https://api.thegraph.com/subgraphs/name/darkforest-eth/dark-forest-v06-round-4';
+const API_URL_GRAPH = 'https://api.thegraph.com/subgraphs/name/cha0sg0d/dry-run-of-death-of-the-universe';
 const API_URL_NAMES = 'https://api.zkga.me/twitter/all-twitters';
 
 const destroyedPlanetPoints = [
@@ -140,14 +140,13 @@ function getQuerySilverArtifact(idGreaterThan=0) {
 function getQueryDistanceToCenter(idGreaterThan=0) {
 	return `
 {
-  planets(first:1000, where:{isRevealed:true, id_gt:"${idGreaterThan}"}) {
+  planets(first:1000, orderBy:"id",where:{isRevealed:true, id_gt:"${idGreaterThan}"}) {
 	id
     owner {
       id
     }
-    x
-    y
     planetLevel
+    revealedRadius
   }
 }`;
 }
@@ -422,7 +421,7 @@ function Plugin() {
 				continue;
 			let hash = p.owner.id;
 			if (!o.players[hash]) createNewPlayer(hash);
-			let dist = Math.sqrt(p.x*p.x + p.y*p.y);
+			let dist = p.revealedRadius;
 			if (dist > o.players[hash].scoreDistanceToCenter)
 				continue;
 			o.players[hash].scoreDistanceToCenter = dist;
@@ -565,4 +564,3 @@ class ScoreboardPlugin {
 }
 
 export default ScoreboardPlugin;
-
